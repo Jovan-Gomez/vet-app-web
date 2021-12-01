@@ -6,11 +6,9 @@ import Error from './Error'
 import { generateId } from '../utils/generateId'
 
 const Form = ({ addPatient }) => {
-  const [petName, setPetName] = useState('')
-  const [customerName, setCustomerName] = useState('')
-  const [email, setEmail] = useState('')
-  const [date, setDate] = useState('')
-  const [description, setDescription] = useState('')
+  const [patient, setPatient] = useState({ petName: '', customerName: '', email: '', date: '', description: '' })
+  const { petName, customerName, email, date, description } = patient
+
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -23,26 +21,18 @@ const Form = ({ addPatient }) => {
     }
     setError(false)
     addPatient({
+      ...patient,
       id: generateId(),
-      petName,
-      customerName,
-      email,
-      date,
-      description,
     })
+    resetInputs()
     setSuccess(true)
     setTimeout(() => {
-      resetInputs()
       setSuccess(false)
-    }, 500)
+    }, 1000)
   }
 
   const resetInputs = () => {
-    setPetName('')
-    setCustomerName('')
-    setEmail('')
-    setDate('')
-    setDescription('')
+    setPatient({ petName: '', customerName: '', email: '', date: '', description: '' })
     setError('')
     setSuccess('')
   }
@@ -56,14 +46,14 @@ const Form = ({ addPatient }) => {
           label='Nombre Mascota'
           placeholder='ej. Milita'
           value={petName}
-          onChange={(e) => setPetName(e.target.value)}
+          onChange={(e) => setPatient({ ...patient, petName: e.target.value })}
         />
         <Input
           id='customerName'
           label='Nombre del Propietario'
           placeholder='ej. Jovan'
           value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
+          onChange={(e) => setPatient({ ...patient, customerName: e.target.value })}
         />
         <Input
           id='email'
@@ -71,15 +61,21 @@ const Form = ({ addPatient }) => {
           type='email'
           placeholder='ej. jovan@g0car.com'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setPatient({ ...patient, email: e.target.value })}
         />
-        <Input id='date' label='Alta' type='date' value={date} onChange={(e) => setDate(e.target.value)} />
+        <Input
+          id='date'
+          label='Alta'
+          type='date'
+          value={date}
+          onChange={(e) => setPatient({ ...patient, date: e.target.value })}
+        />
         <Input
           id='description'
           label='Describe los Sintomas'
           placeholder='ej. vomito cronico'
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => setPatient({ ...patient, description: e.target.value })}
           textarea='true'
         />
         <button

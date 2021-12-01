@@ -8,10 +8,14 @@ import PatientsListItem from './PatientsListItem'
 const PatientsList = ({ patients, setPatients }) => {
   const [edit, setEdit] = useState(false)
   const [deletePatient, setDelete] = useState(false)
+  const [animateModal, setAnimateModal] = useState(false)
   const [patientInfo, setPatientInfo] = useState({})
 
   const handlerActionModal = (patient = {}, edit) => {
     setPatientInfo(patient)
+    setTimeout(() => {
+      setAnimateModal(true)
+    }, 300)
     if (edit) {
       setEdit(true)
       return
@@ -19,6 +23,7 @@ const PatientsList = ({ patients, setPatients }) => {
     setDelete(true)
   }
   const handleEditModal = (patient) => {
+    setAnimateModal(false)
     setPatients((prev) => {
       return prev.map((patientState) => {
         return patientState.id === patient.id ? patient : patientState
@@ -28,6 +33,7 @@ const PatientsList = ({ patients, setPatients }) => {
   }
 
   const handleDeleteModal = (id) => {
+    setAnimateModal(false)
     setPatients((prev) => {
       return prev.filter((patientState) => {
         return patientState.id !== id
@@ -37,9 +43,12 @@ const PatientsList = ({ patients, setPatients }) => {
   }
 
   const closeModal = () => {
-    setEdit(false)
-    setDelete(false)
-    setPatientInfo({})
+    setAnimateModal(false)
+    setTimeout(() => {
+      setEdit(false)
+      setDelete(false)
+      setPatientInfo({})
+    }, 500)
   }
 
   const list = patients.map((patient) => (
@@ -58,12 +67,12 @@ const PatientsList = ({ patients, setPatients }) => {
         )}
       </section>
       {edit && (
-        <Modal title='Editar Paciente' onClose={closeModal}>
+        <Modal title='Editar Paciente' onClose={closeModal} animateModal={animateModal}>
           <EditModal patient={patientInfo} setPatient={setPatientInfo} handleEdit={handleEditModal} />
         </Modal>
       )}
       {deletePatient && (
-        <Modal title='Eliminar Paciente' onClose={closeModal}>
+        <Modal title='Eliminar Paciente' onClose={closeModal} animateModal={animateModal}>
           <DeleteModal patient={patientInfo} handleDelete={handleDeleteModal} />
         </Modal>
       )}
